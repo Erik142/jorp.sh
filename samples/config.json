@@ -12,7 +12,8 @@
       "$HOME/.tmux",
       "$HOME/.emacs.d",
       "$HOME/.cargo"
-    ]
+    ],
+    "extra_fd_args": ""
   },
   "tmux": {
     "extra_options": ""

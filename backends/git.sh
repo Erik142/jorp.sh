@@ -44,7 +44,8 @@ function git_get_submenu_items() {
     exclude_str="$(echo $exclude_str | sed "s|$search_filter||g")"
   done
 
-  fd_command="fd -u '^\.git$' --prune $exclude_str --type d $search_dirs -X printf '%s\\n' '{//}'"
+  extra_fd_args="$(config_get_item "$CONFIG_GIT_EXTRA_FD_ARGS")"
+  fd_command="fd -u '^\.git$' --prune $exclude_str --type d $search_dirs $extra_fd_args -X printf '%s\\n' '{//}'"
   log "$LOG_DEBUG" "Exclude dirs: '$exclude_str'"
   log "$LOG_DEBUG" "Search filter: '$search_filter'"
   log "$LOG_DEBUG" "Search dir: '$search_dir'"
