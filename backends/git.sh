@@ -14,7 +14,34 @@ function git_get_items() {
 }
 
 function git_get_submenu_items() {
-fd -u '^\.git$' --prune --exclude "\.local\/share" --exclude "Library" --exclude "\.tmux" --exclude "\.emacs\.d" --exclude "\.cargo" --type d --search-path "$HOME" -X printf '%s\n' '{//}'
+  exclude_str=""
+  for exclude_dir in "${GIT_EXCLUDE_DIRS[@]}";
+  do
+    exclude_dir="$(echo $exclude_dir | sed 's|\/|\\\/|g')"
+    exclude_dir="$(echo $exclude_dir | sed 's|\.|\\\.|g')"
+    exclude_str="${exclude_str} --exclude \"${exclude_dir}\""
+  done
+
+  search_dirs=""
+
+  for search_dir in "${GIT_PROJECT_DIRS[@]}";
+  do
+    search_dirs="${search_dirs} --search-path ${search_dir}"
+
+    if [[ "$search_dir" != *"/" ]]; then
+      search_dir="${search_dir}/"
+    fi
+    search_filter="$(echo $search_dir | sed -e 's|\.|\\\.|g')"
+    search_filter="$(echo $search_filter | sed -e 's|\/|\\\\\\\/|g')"
+    exclude_str="$(echo $exclude_str | sed "s|$search_filter||g")"
+  done
+
+  fd_command="fd -u '^\.git$' --prune $exclude_str --type d $search_dirs -X printf '%s\\n' '{//}'"
+  log "$LOG_DEBUG" "Exclude dirs: '$exclude_str'"
+  log "$LOG_DEBUG" "Search filter: '$search_filter'"
+  log "$LOG_DEBUG" "Search dir: '$search_dir'"
+  log "$LOG_DEBUG" "fd command is: '$fd_command'"
+  eval "$fd_command"
 }
 
 function git_select_submenu_item() {
