@@ -10,6 +10,15 @@ backends=("tmux" "git" "path" "scratchpad" )
 
 declare -a BACKEND_ITEMS
 
+function backend_init() {
+  for backend in "${backends[@]}";
+  do
+    if [ "$(backend_require_init "$backend")" == "y" ]; then
+      find_and_execute_backend_function "init" "$backend"
+    fi
+  done
+}
+
 function get_items() {
   remove="$1"
   BACKEND_ITEMS=()
@@ -85,6 +94,11 @@ function select_item() {
 
 function remove_item() {
   find_and_execute_backend_function "remove_item" "$@"
+}
+
+function backend_require_init() {
+  [[ "$(find_and_execute_backend_function "get_capabilities" "$backend")" == *"$CAPABILITY_REQUIRE_INIT"* ]] && \
+    echo "y" || echo "n"
 }
 
 function backend_has_removal() {

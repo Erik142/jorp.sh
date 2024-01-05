@@ -2,12 +2,18 @@
 
 TMUX_PREFIX="Tmux"
 
+TMUX_OPTS=""
+
+function tmux_init() {
+  TMUX_OPTS="$(config_get_item "$CONFIG_TMUX_EXTRA_OPTIONS")"
+}
+
 function tmux_get_prefix() {
   echo "$TMUX_PREFIX"
 }
 
 function tmux_get_capabilities() {
-  echo "$CAPABILITY_ITEM_REMOVAL"
+  echo "$CAPABILITY_ITEM_REMOVAL|$CAPABILITY_REQUIRE_INIT"
 }
 
 function tmux_get_items() {

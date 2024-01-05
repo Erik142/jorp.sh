@@ -1,0 +1,20 @@
+{
+  "general": {
+    "max_log_level": "INFO"
+  },
+  "git": {
+    "project_dirs": [
+      "$HOME"
+    ],
+    "excluded_dirs": [
+      "$HOME/.local/share",
+      "$HOME/Library",
+      "$HOME/.tmux",
+      "$HOME/.emacs.d",
+      "$HOME/.cargo"
+    ]
+  },
+  "tmux": {
+    "extra_options": ""
+  }
+}

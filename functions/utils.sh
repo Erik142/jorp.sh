@@ -8,7 +8,20 @@ LOG_DEBUG="DEBUG"
 
 declare -rA LOG_LEVELS=(["$LOG_ERROR"]=0 ["$LOG_WARNING"]=1 ["$LOG_INFO"]=3 ["$LOG_VERBOSE"]=4 ["$LOG_DEBUG"]=5)
 
+DEFAULT_LOG_LEVEL="INFO"
 MAX_LOG_LEVEL="$DEFAULT_LOG_LEVEL"
+
+function log_init() {
+    max_log_level="$(config_get_item $CONFIG_GENERAL_MAX_LOG_LEVEL)"
+
+    if [ -n "$max_log_level" ]; then
+        if [ -n "${LOG_LEVELS[$max_log_level]}" ]; then
+            MAX_LOG_LEVEL="$max_log_level"
+        else
+            log "$LOG_WARNING" "'$max_log_level' is not a valid log level"
+        fi
+    fi
+}
 
 function log() {
     if [ $# -le 2 ] && [ $# -ne 0 ]; then

@@ -1,12 +1,20 @@
 GIT_PREFIX="Git"
 GIT_SUBMENU="Find Git repositories"
 
+declare -a GIT_PROJECT_DIRS
+declare -a GIT_EXCLUDED_DIRS
+
+function git_init(){
+  mapfile -t GIT_PROJECT_DIRS < <(config_get_item "$CONFIG_GIT_PROJECT_DIRS")
+  mapfile -t GIT_EXCLUDED_DIRS < <(config_get_item "$CONFIG_GIT_EXCLUDED_DIRS")
+}
+
 function git_get_prefix() {
   echo "$GIT_PREFIX"
 }
 
 function git_get_capabilities() {
-  echo "$CAPABILITY_SUBMENU"
+  echo "$CAPABILITY_SUBMENU|$CAPABILITY_REQUIRE_INIT"
 }
 
 function git_get_items() {
@@ -15,7 +23,7 @@ function git_get_items() {
 
 function git_get_submenu_items() {
   exclude_str=""
-  for exclude_dir in "${GIT_EXCLUDE_DIRS[@]}";
+  for exclude_dir in "${GIT_EXCLUDED_DIRS[@]}";
   do
     exclude_dir="$(echo $exclude_dir | sed 's|\/|\\\/|g')"
     exclude_dir="$(echo $exclude_dir | sed 's|\.|\\\.|g')"

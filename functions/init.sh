@@ -3,6 +3,7 @@
 ####################################
 #          Source functions        #
 ####################################
+. "$this_script_dir/functions/config.sh"
 . "$this_script_dir/functions/utils.sh"
 . "$this_script_dir/backends/init.sh"
 
@@ -70,21 +71,24 @@ function parse_args() {
               ;;
       esac
   done
-
-    if [ "$verbose" == "y" ]; then
-      export MAX_LOG_LEVEL="$LOG_VERBOSE"
-    fi
-
-    if [ "$debug" == "y" ]; then
-      export MAX_LOG_LEVEL="$LOG_DEBUG"
-    fi
 }
 
 function run_project_manager() {
   parse_args "$@"
+  config_init
+  log_init
+  backend_init
+
+  if [ "$verbose" == "y" ]; then
+    export MAX_LOG_LEVEL="$LOG_VERBOSE"
+  fi
+
+  if [ "$debug" == "y" ]; then
+    export MAX_LOG_LEVEL="$LOG_DEBUG"
+  fi
+
   log "$LOG_VERBOSE"  "Arguments are '$*'"
   log "$LOG_DEBUG" "This script is located in '$this_script_dir'"
-  log "$LOG_VERBOSE" "Default log level is: $DEFAULT_LOG_LEVEL"
 
   if [ "$batch" == "y" ]; then
     backend="$(echo "$batch_args" | cut -d" " -f1)"
