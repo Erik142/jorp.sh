@@ -26,8 +26,8 @@ function scratchpad_show_submenu() {
   tmuxinator start scratchpad -n "$session_name"
 
   if [[ "$TERM_PROGRAM" == "tmux" ]]; then
-    tmux switch -t "$session_name"
+    tmux $TMUX_OPTS switch -t "$session_name"
   else
-    tmux attach-session -t "$session_name"
+    tmux $TMUX_OPTS attach-session -t "$session_name"
   fi
 }
