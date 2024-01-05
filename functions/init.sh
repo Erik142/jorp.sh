@@ -12,10 +12,10 @@
 # option --output/-o requires 1 argument
 # LONGOPTS=debug,force,output:,verbose
 # OPTIONS=dfo:v
-LONGOPTS=batch:,debug,remove,verbose
-OPTIONS=b:drv
+LONGOPTS=batch:,config:,debug,remove,verbose
+OPTIONS=b:c:drv
 
-export batch=n batch_args="" debug=n verbose=n remove=n
+export batch=n batch_args="" config_file="" debug=n verbose=n remove=n
 
 function parse_args() {
   #set -o errexit -o pipefail -o noclobber -o nounset
@@ -49,6 +49,11 @@ function parse_args() {
               shift
               shift
               ;;
+          -c|--config)
+              config_file="$2"
+              shift
+              shift
+              ;;
           -d|--debug)
               debug=y
               shift
@@ -75,7 +80,7 @@ function parse_args() {
 
 function run_project_manager() {
   parse_args "$@"
-  config_init
+  config_init "$config_file"
   log_init
   backend_init
 
