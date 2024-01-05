@@ -6,7 +6,7 @@ function scratchpad_get_prefix() {
 }
 
 function scratchpad_get_capabilities() {
-  echo "$CAPABILITY_SUBMENU"
+  echo "$CAPABILITY_SUBMENU|$CAPABILITY_BATCH"
 }
 
 function scratchpad_get_items() {
@@ -22,8 +22,31 @@ function scratchpad_show_submenu() {
     exit 1
   fi
 
-  session_name="${scratchpad_name}-$(date +%Y%m%d-%H%M%S)"
-  tmuxinator start scratchpad -n "$session_name"
+  scratchpad_run_batch "$scratchpad_name"
+}
+
+function scratchpad_get_session_name() {
+  tmux_get_items | grep "$1" | sort -r | head -1
+}
+
+function scratchpad_run_batch() {
+  scratchpad_name="$1"
+  open_existing_scratchpad="n"
+
+  if [ -n "$2" ]; then
+    open_existing_scratchpad="$2"
+  fi
+
+  session_name=""
+
+  if [ "$open_existing_scratchpad" == "y" ]; then
+    session_name="$(scratchpad_get_session_name "$scratchpad_name")"
+  fi
+
+  if [ -z "$session_name" ]; then
+    session_name="${scratchpad_name}-$(date +%Y%m%d-%H%M%S)"
+    tmuxinator start scratchpad -n "$session_name"
+  fi
 
   if [[ "$TERM_PROGRAM" == "tmux" ]]; then
     tmux $TMUX_OPTS switch -t "$session_name"

@@ -11,10 +11,10 @@
 # option --output/-o requires 1 argument
 # LONGOPTS=debug,force,output:,verbose
 # OPTIONS=dfo:v
-LONGOPTS=debug,remove,verbose
-OPTIONS=drv
+LONGOPTS=batch:,debug,remove,verbose
+OPTIONS=b:drv
 
-export debug=n verbose=n remove=n
+export batch=n batch_args="" debug=n verbose=n remove=n
 
 function parse_args() {
   #set -o errexit -o pipefail -o noclobber -o nounset
@@ -42,6 +42,12 @@ function parse_args() {
   # now enjoy the options in order and nicely split until we see --
   while true; do
       case "$1" in
+          -b|--batch)
+              batch=y
+              batch_args="$2"
+              shift
+              shift
+              ;;
           -d|--debug)
               debug=y
               shift
@@ -80,6 +86,18 @@ function run_project_manager() {
   log "$LOG_DEBUG" "This script is located in '$this_script_dir'"
   log "$LOG_VERBOSE" "Default log level is: $DEFAULT_LOG_LEVEL"
 
+  if [ "$batch" == "y" ]; then
+    backend="$(echo "$batch_args" | cut -d" " -f1)"
+    batch_args="$(echo "$batch_args" | cut -d" " -f2-)"
+
+    if [ "$(backend_has_batch "$backend")" == "n" ]; then
+      log "$LOG_DEBUG" "The backend '$backend' does not support batch processing"
+      exit 1
+    fi
+
+    eval "${backend}_run_batch $batch_args"
+    return
+  fi
   get_items "$remove"
 
   selected_item="$(printf "%s\n" "${BACKEND_ITEMS[@]}" | fzf)"

@@ -97,6 +97,11 @@ function backend_has_submenu() {
     echo "y" || echo "n"
 }
 
+function backend_has_batch() {
+  [[ "$(find_and_execute_backend_function "get_capabilities" "$backend")" == *"$CAPABILITY_BATCH"* ]] && \
+    echo "y" || echo "n"
+}
+
 function show_submenu() {
   local backend="$1"
   if [[ "$(find_and_execute_backend_function "get_capabilities" "$backend")" != *"$CAPABILITY_SUBMENU"* ]]; then
