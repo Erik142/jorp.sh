@@ -12,7 +12,11 @@ DEFAULT_LOG_LEVEL="INFO"
 MAX_LOG_LEVEL="$DEFAULT_LOG_LEVEL"
 
 function log_init() {
-    max_log_level="$(config_get_item $CONFIG_GENERAL_MAX_LOG_LEVEL)"
+    max_log_level="$1"
+
+    if [ -z "$max_log_level" ]; then
+        max_log_level="$(config_get_item $CONFIG_GENERAL_MAX_LOG_LEVEL)"
+    fi
 
     if [ -n "$max_log_level" ]; then
         if [ -n "${LOG_LEVELS[$max_log_level]}" ]; then

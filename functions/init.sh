@@ -81,16 +81,19 @@ function parse_args() {
 function run_project_manager() {
   parse_args "$@"
   config_init "$config_file"
-  log_init
-  backend_init
+
+  max_log_level=""
 
   if [ "$verbose" == "y" ]; then
-    export MAX_LOG_LEVEL="$LOG_VERBOSE"
+    max_log_level="$LOG_VERBOSE"
   fi
 
   if [ "$debug" == "y" ]; then
-    export MAX_LOG_LEVEL="$LOG_DEBUG"
+    max_log_level="$LOG_DEBUG"
   fi
+
+  log_init "$max_log_level"
+  backend_init
 
   log "$LOG_VERBOSE"  "Arguments are '$*'"
   log "$LOG_DEBUG" "This script is located in '$this_script_dir'"
