@@ -1,12 +1,23 @@
 SCRATCHPAD_PREFIX="Scratchpad"
 SCRATCHPAD_SUBMENU="Create new scratchpad"
 
+SCRATCHPAD_DEFAULT_NAME="scratch"
+
+function scratchpad_init() {
+  default_name="$(config_get_item "$CONFIG_SCRATCHPAD_DEFAULT_NAME")"
+
+  if [ -n "$default_name" ]; then
+    log "$LOG_DEBUG" "Setting default scratchpad name to '$default_name'"
+    SCRATCHPAD_DEFAULT_NAME="$default_name"
+  fi
+}
+
 function scratchpad_get_prefix() {
   echo "$SCRATCHPAD_PREFIX"
 }
 
 function scratchpad_get_capabilities() {
-  echo "$CAPABILITY_SUBMENU|$CAPABILITY_BATCH"
+  echo "$CAPABILITY_SUBMENU|$CAPABILITY_BATCH|$CAPABILITY_REQUIRE_INIT"
 }
 
 function scratchpad_get_items() {
@@ -15,7 +26,7 @@ function scratchpad_get_items() {
 
 function scratchpad_show_submenu() {
   clear
-  read -e -p "Enter name of scratchpad: " -i "scratch" scratchpad_name
+  read -e -p "Enter name of scratchpad: " -i "$SCRATCHPAD_DEFAULT_NAME" scratchpad_name
 
   if [ -z "$scratchpad_name" ]; then
     log "$LOG_ERROR" "Scratchpad name is empty."
