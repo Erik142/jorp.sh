@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-jq="jq -r -c"
+jq="jq -r -c -e"
 
 CONFIG_GENERAL_MAX_LOG_LEVEL="'.general.max_log_level'"
 CONFIG_GIT_PROJECT_DIRS="'.git.project_dirs.[]'"
