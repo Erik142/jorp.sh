@@ -14,6 +14,7 @@ function backend_init() {
   for backend in "${backends[@]}";
   do
     if [ "$(backend_require_init "$backend")" == "y" ]; then
+      log "$LOG_DEBUG" "Executing init function for backend '$backend'"
       find_and_execute_backend_function "init" "$backend"
     fi
   done
