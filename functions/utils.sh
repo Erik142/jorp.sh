@@ -39,7 +39,13 @@ function log() {
         fi
 
         if (( ${LOG_LEVELS["$log_level"]} <= ${LOG_LEVELS["$MAX_LOG_LEVEL"]} )); then
-            echo -e "$log_level\t<${FUNCNAME[1]}>: \t$message" >&2
+            if [ "$MAX_LOG_LEVEL" == "$LOG_DEBUG" ]; then 
+                printf "%-8s %-55s %s\n" "$log_level" "($(realpath --relative-to="$this_script_dir" "${BASH_SOURCE[1]}"): <${FUNCNAME[1]}: ${BASH_LINENO[0]}>)" "$message" >&2
+            elif [ "$MAX_LOG_LEVEL" == "$LOG_VERBOSE" ]; then
+                printf "%-8s %-35s %s\n" "$log_level" "<${FUNCNAME[1]}: ${BASH_LINENO[0]}>" "$message" >&2
+            else
+                printf "%-8s %s\n" "$log_level" "$message" >&2
+            fi
         fi
     else
         log "Wrong amount of arguments: '$*'"
