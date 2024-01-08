@@ -6,6 +6,14 @@ LOG_INFO="INFO"
 LOG_VERBOSE="VERBOSE"
 LOG_DEBUG="DEBUG"
 
+COLOR_DEFAULT="\033[0m"
+COLOR_RED="\033[1;31m"
+COLOR_YELLOW="\033[1;33m"
+COLOR_BLUE="\033[1;34m"
+
+FORMATTING_BOLD="\033[1m"
+FORMATTING_NORMAL="\033[0m"
+
 declare -rA LOG_LEVELS=(["$LOG_ERROR"]=0 ["$LOG_WARNING"]=1 ["$LOG_INFO"]=3 ["$LOG_VERBOSE"]=4 ["$LOG_DEBUG"]=5)
 
 DEFAULT_LOG_LEVEL="INFO"
@@ -27,6 +35,35 @@ function log_init() {
     fi
 }
 
+function log_level_color() {
+    case "$1" in
+        "$LOG_ERROR")
+            echo "${COLOR_RED}${1}${COLOR_DEFAULT}"
+            ;;
+        "$LOG_WARNING")
+            echo "${COLOR_YELLOW}${1}${COLOR_DEFAULT}"
+            ;;
+        "$LOG_DEBUG")
+            echo "${COLOR_BLUE}${1}${COLOR_DEFAULT}"
+            ;;
+        *)
+            echo "${FORMATTING_BOLD}${1}${FORMATTING_NORMAL}"
+    esac
+}
+
+function log_level_length() {
+    wanted_length="$2"
+    color=$(log_level_color "$1")
+    original_length=${#color}
+    color=${color//${COLOR_DEFAULT}/}
+    color=${color//${COLOR_RED}/}
+    color=${color//${COLOR_YELLOW}/}
+    color=${color//${COLOR_BLUE}/}
+    color=${color//${FORMATTING_BOLD}/}
+    length=${#color}
+    echo "$(( wanted_length + original_length - length ))"
+}
+
 function log() {
     if [ $# -le 2 ] && [ $# -ne 0 ]; then
         log_level="$DEFAULT_LOG_LEVEL"
@@ -40,11 +77,11 @@ function log() {
 
         if (( ${LOG_LEVELS["$log_level"]} <= ${LOG_LEVELS["$MAX_LOG_LEVEL"]} )); then
             if [ "$MAX_LOG_LEVEL" == "$LOG_DEBUG" ]; then 
-                printf "%-8s %-55s %s\n" "$log_level" "($(realpath --relative-to="$this_script_dir" "${BASH_SOURCE[1]}"): <${FUNCNAME[1]}: ${BASH_LINENO[0]}>)" "$message" >&2
+                printf "%-$(log_level_length $log_level 8)b %-55s %s\n" "$(log_level_color $log_level)" "($(realpath --relative-to="$this_script_dir" "${BASH_SOURCE[1]}"): <${FUNCNAME[1]}: ${BASH_LINENO[0]}>)" "$message" >&2
             elif [ "$MAX_LOG_LEVEL" == "$LOG_VERBOSE" ]; then
-                printf "%-8s %-35s %s\n" "$log_level" "<${FUNCNAME[1]}: ${BASH_LINENO[0]}>" "$message" >&2
+                printf "%-$(log_level_length $log_level 8)b %-35s %s\n" "$(log_level_color $log_level)" "<${FUNCNAME[1]}: ${BASH_LINENO[0]}>" "$message" >&2
             else
-                printf "%-8s %s\n" "$log_level" "$message" >&2
+                printf "%-$(log_level_length $log_level 8)b %s\n" "$(log_level_color $log_level)" "$message" >&2
             fi
         fi
     else
