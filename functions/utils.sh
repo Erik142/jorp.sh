@@ -112,6 +112,7 @@ function get_session_name() {
   fi
 
   final_path="$final_path/$leaf_path"
+  final_path=${final_path//./_}
 
   echo "$final_path-$(date +%Y%m%d-%H%M%S)"
 }
