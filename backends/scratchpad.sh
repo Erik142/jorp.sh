@@ -56,7 +56,14 @@ function scratchpad_run_batch() {
 
   if [ -z "$session_name" ]; then
     session_name="${scratchpad_name}-$(date +%Y%m%d-%H%M%S)"
-    tmuxinator start scratchpad -n "$session_name"
+    action="$(config_get_item "$CONFIG_SCRATCHPAD_ACTION")"
+
+    if [ -z "$action" ]; then
+      log "$LOG_ERROR" "No scratchpad action defined in user configuration file"
+      exit 1
+    fi
+
+    eval "$action"
   fi
 
   if [[ "$TERM_PROGRAM" == "tmux" ]]; then
