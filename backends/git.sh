@@ -1,6 +1,8 @@
 GIT_PREFIX="Git"
 GIT_SUBMENU="Find Git repositories"
 
+GIT_DEFAULT_ACTION='cd ${git_repository_path}'
+
 declare -a GIT_PROJECT_DIRS
 declare -a GIT_EXCLUDED_DIRS
 
@@ -58,6 +60,19 @@ function git_select_submenu_item() {
     log "$LOG_ERROR" "The directory '$1' does not exist"
   fi
 
-  session_name="$(get_session_name "$1")"
-  tmuxinator start code-project workspace="$1" -n "$session_name"
+  # The following variables are available upon terminal multiplexer session
+  # creation
+  git_repository_path="$1"
+  git_repository_name="$(basename "$git_repository_path")"
+  git_repository_parent_dir="$(dirname "$git_repository_path")"
+  session_name="$(get_session_name "$git_repository_path")"
+
+  action="$(config_get_item "$CONFIG_GIT_ACTION")"
+
+  if [ -z "$action" ]; then
+    action="$GIT_DEFAULT_ACTION"
+    log "$LOG_VERBOSE" "Executing default git action: '$action'"
+  fi
+
+  eval "$action"
 }
