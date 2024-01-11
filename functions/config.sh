@@ -6,6 +6,7 @@ CONFIG_GENERAL_MAX_LOG_LEVEL="'.general.max_log_level'"
 CONFIG_GIT_PROJECT_DIRS="'.git.project_dirs.[]'"
 CONFIG_GIT_EXCLUDED_DIRS="'.git.excluded_dirs.[]'"
 CONFIG_GIT_EXTRA_FD_ARGS="'.git.extra_fd_args'"
+CONFIG_GIT_ACTION="'.git.action'"
 CONFIG_SCRATCHPAD_DEFAULT_NAME="'.scratchpad.default_name'"
 CONFIG_TMUX_EXTRA_OPTIONS="'.tmux.extra_options'"
 
