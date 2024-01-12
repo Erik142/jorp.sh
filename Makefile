@@ -1,4 +1,4 @@
-TOP := $(realpath $(dir $(realpath $(firstword $(MAKEFILE_LIST)))))
+export TOP := $(realpath $(dir $(realpath $(firstword $(MAKEFILE_LIST)))))
 
 .PHONY: test
 test:
