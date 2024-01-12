@@ -43,15 +43,14 @@ setup() {
 }
 
 @test "log level configuration functions properly" {
-  log_init "$LOG_DEBUG"
-
+  run log_init "$LOG_DEBUG"
   local level=""
 
   for level in "${!LOG_LEVELS[@]}"; do
     echo "$level"
     run log "$level" "This is a log message"
     assert_success
-    assert_output --partial "$log_level"
+    assert_output --partial "$level"
   done
 }
 
