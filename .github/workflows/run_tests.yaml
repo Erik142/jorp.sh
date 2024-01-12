@@ -1,0 +1,19 @@
+name: Run bats tests
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: checkout git repository
+        uses: actions/checkout@v4
+        with:
+          submodules: "recursive"
+
+      - name: run tests
+        run: make test
