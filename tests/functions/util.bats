@@ -1,18 +1,13 @@
 
 
 setup() {
-  DIR="$( cd "$( dirname "${BATS_TEST_FILENAME}" )/../../" >/dev/null 2>&1 && pwd )"
-  load "${DIR}/bats/bats-support/load"
-  load "${DIR}/bats/bats-assert/load"
-}
+  source "${TOP}/tests/common.sh"
+  common_setup
 
-@test "can source utils.sh" {
-  assert source ${DIR}/functions/utils.sh
+  source ${TOP}/functions/utils.sh
 }
 
 @test "can call log_init with valid argument" {
-  assert source ${DIR}/functions/utils.sh
-
   for log_level in "${!LOG_LEVELS[@]}"; do
     run log_init "$log_level"
     assert_success
@@ -21,20 +16,17 @@ setup() {
 }
 
 @test "cannot call log_init with invalid argument" {
-  source ${DIR}/functions/utils.sh
   run log_init "hej"
   assert_failure
 }
 
 
 @test "can call log_init with empty argument" {
-  source ${DIR}/functions/utils.sh
   assert log_init ""
   assert_equal "$DEFAULT_LOG_LEVEL" "$MAX_LOG_LEVEL"
 }
 
 @test "cannot log with invalid number of arguments" {
-  source ${DIR}/functions/utils.sh
   run log
   assert_failure
 
@@ -43,7 +35,6 @@ setup() {
 }
 
 @test "can log with valid number of arguments" {
-  source ${DIR}/functions/utils.sh
   run log "This is a log message"
   assert_success
 
@@ -52,8 +43,6 @@ setup() {
 }
 
 @test "log level configuration functions properly" {
-  source ${DIR}/functions/utils.sh
-
   log_init "$LOG_DEBUG"
 
   local level=""
@@ -67,8 +56,6 @@ setup() {
 }
 
 @test "session names without dots resolve correctly" {
-  source ${DIR}/functions/utils.sh
-
   directory_path="/Test/my/directory/Is/parsing/Correctly"
   expected_session_name="/T/m/d/I/p/Correctly"
 
@@ -78,8 +65,6 @@ setup() {
 }
 
 @test "session names with leading dots resolve correctly" {
-  source ${DIR}/functions/utils.sh
-
   directory_path="/Test/my/.directory/Is/parsing/.Correctly"
   expected_session_name="/T/m/_/I/p/_Correctly"
 
@@ -89,8 +74,6 @@ setup() {
 }
 
 @test "session names with trailing dots resolve correctly" {
-  source ${DIR}/functions/utils.sh
-
   directory_path="/Test/my/directory./Is/parsing/Correctly."
   expected_session_name="/T/m/d/I/p/Correctly_"
 
@@ -100,8 +83,6 @@ setup() {
 }
 
 @test "session names with dots in the middle resolve correctly" {
-  source ${DIR}/functions/utils.sh
-
   directory_path="/Test/my/direc.tory/Is/parsing/Correct.ly"
   expected_session_name="/T/m/d/I/p/Correct_ly"
 
