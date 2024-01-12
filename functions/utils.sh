@@ -30,7 +30,8 @@ function log_init() {
         if [ -n "${LOG_LEVELS[$max_log_level]}" ]; then
             MAX_LOG_LEVEL="$max_log_level"
         else
-            log "$LOG_WARNING" "'$max_log_level' is not a valid log level"
+            log "$LOG_ERROR" "'$max_log_level' is not a valid log level"
+            exit 1
         fi
     fi
 }
@@ -66,7 +67,7 @@ function log_level_length() {
 
 function log() {
     if [ $# -le 2 ] && [ $# -ne 0 ]; then
-        log_level="$DEFAULT_LOG_LEVEL"
+        local log_level="$DEFAULT_LOG_LEVEL"
         message=""
         if [ $# -eq 2 ]; then
             log_level="$1"
