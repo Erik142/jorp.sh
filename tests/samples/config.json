@@ -1,0 +1,17 @@
+{
+  "general": {
+    "max_log_level": "DEBUG"
+  },
+  "git": {
+    "project_dirs": [
+      "$HOME"
+    ],
+    "excluded_dirs": []
+  },
+  "scratchpad": {
+    "default_name": "scratchy-scratch"
+  },
+  "tmux": {
+    "extra_options": ""
+  }
+}

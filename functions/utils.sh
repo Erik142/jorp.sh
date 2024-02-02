@@ -76,7 +76,7 @@ function log() {
             message="$1"
         fi
 
-        if (( ${LOG_LEVELS["$log_level"]} <= ${LOG_LEVELS["$MAX_LOG_LEVEL"]} )); then
+        if [ ${LOG_LEVELS["$log_level"]} -le ${LOG_LEVELS["$MAX_LOG_LEVEL"]} ]; then
             if [ "$MAX_LOG_LEVEL" == "$LOG_DEBUG" ]; then 
                 printf "%-$(log_level_length $log_level 8)b %-55s %s\n" "$(log_level_color $log_level)" "($(realpath --relative-to="$this_script_dir" "${BASH_SOURCE[1]}"): <${FUNCNAME[1]}: ${BASH_LINENO[0]}>)" "$message" >&2
             elif [ "$MAX_LOG_LEVEL" == "$LOG_VERBOSE" ]; then

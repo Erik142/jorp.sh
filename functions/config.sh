@@ -47,7 +47,7 @@ function config_init() {
 
 function config_get_item() {
   config_file="$(config_get_file_path)"
-  config_item="$(eval $jq "$1" "$config_file")"
+  config_item="$(eval $jq "$1" "$config_file" 2>&1)"
 
   if [ $? -ne 0 ]; then
     log "$LOG_VERBOSE" "Could not retrieve configuration item $1"
