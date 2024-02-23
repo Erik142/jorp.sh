@@ -20,9 +20,9 @@ function config_get_file_path() {
 
   if [ -z "$config_file_location" ]; then
     if [ -n "$XDG_CONFIG_HOME" ]; then
-      config_file_location="$XDG_CONFIG_HOME/project-manager/config.json"
+      config_file_location="$XDG_CONFIG_HOME/jorp.sh/config.json"
     else
-      config_file_location="$HOME/.config/project-manager/config.json"
+      config_file_location="$HOME/.config/jorp.sh/config.json"
     fi
   fi
 
@@ -47,7 +47,7 @@ function config_init() {
 
 function config_get_item() {
   config_file="$(config_get_file_path)"
-  config_item="$(eval $jq "$1" "$config_file")"
+  config_item="$(eval $jq "$1" "$config_file" 2>&1)"
 
   if [ $? -ne 0 ]; then
     log "$LOG_VERBOSE" "Could not retrieve configuration item $1"
