@@ -1,7 +1,8 @@
 #!/usr/bin/env bash
 
 # Get the directory name for the current script
-export this_script_dir="$(cd "$(dirname "$(readlink -f "$0")")"; pwd)"
+this_script_dir="$(cd "$(dirname "$(readlink -f "$0")")" || exit; pwd)"
+export this_script_dir
 
 ####################################
 #          Source functions        #
