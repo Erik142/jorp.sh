@@ -1,5 +1,3 @@
-
-
 setup() {
   source "${TOP}/tests/common.sh"
   common_setup
