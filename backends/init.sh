@@ -1,10 +1,10 @@
 #!/usr/bin/env bash
 
-. $this_script_dir/backends/capabilities.sh
-. $this_script_dir/backends/tmux.sh
-. $this_script_dir/backends/git.sh
-. $this_script_dir/backends/path.sh
-. $this_script_dir/backends/scratchpad.sh
+. "$THIS_SCRIPT_DIR/backends/capabilities.sh"
+. "$THIS_SCRIPT_DIR/backends/tmux.sh"
+. "$THIS_SCRIPT_DIR/backends/git.sh"
+. "$THIS_SCRIPT_DIR/backends/path.sh"
+. "$THIS_SCRIPT_DIR/backends/scratchpad.sh"
 
 backends=("tmux" "git" "path" "scratchpad" )
 
@@ -36,12 +36,12 @@ function get_items() {
       fi
     fi
 
-    prefix="$(${backend}_get_prefix)" 
-    mapfile -t backend_items < <(${backend}_get_items)
+    prefix="$("${backend}"_get_prefix)" 
+    mapfile -t backend_items < <("${backend}"_get_items)
 
     for backend_item in "${backend_items[@]}";
     do
-      BACKEND_ITEMS[$index]="$prefix: $backend_item"
+      BACKEND_ITEMS[index]="$prefix: $backend_item"
       index=$((index + 1)) 
     done
   done
@@ -55,7 +55,7 @@ function get_items() {
 function get_backend_from_prefix() {
   for backend in "${backends[@]}";
   do
-    prefix="$(${backend}_get_prefix)"
+    prefix="$("${backend}"_get_prefix)"
     if [ "$prefix" == "$1" ]; then
       echo "$backend"
       return
@@ -73,14 +73,12 @@ function find_and_execute_backend_function() {
   for backend in "${backends[@]}";
   do
     if [ "$backend" == "$chosen_backend" ]; then
-      declare -F "${backend}_${function}" > /dev/null;
-      
-      if [ "$?" -ne "0" ]; then
+      if ! declare -F "${backend}_${function}" > /dev/null; then
         log "$LOG_ERROR" "The function '${backend}_${function} does not exist"
         exit 1
       fi
     
-      ${backend}_${function} "$@"
+      "${backend}"_"${function}" "$@"
       return
     fi
   done
@@ -124,9 +122,7 @@ function show_submenu() {
     exit 1
   fi
 
-  declare -F "${backend}_show_submenu" > /dev/null;
-
-  if [ "$?" -eq "0" ]; then 
+  if declare -F "${backend}_show_submenu" > /dev/null; then
     log "$LOG_DEBUG" "The backend '$backend' implements a custom submenu. Showing it..."
     find_and_execute_backend_function "show_submenu" "$backend"
   else
