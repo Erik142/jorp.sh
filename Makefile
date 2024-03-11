@@ -1,5 +1,9 @@
 export TOP := $(realpath $(dir $(realpath $(firstword $(MAKEFILE_LIST)))))
 
+.PHONY: lint
+lint:
+	fd --glob '*.sh' --type f -u -a $(TOP) | xargs shellcheck -x
+
 .PHONY: test
 test:
 	@echo "TOP is '$(TOP)'"
