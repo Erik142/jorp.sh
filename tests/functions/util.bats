@@ -1,8 +1,8 @@
 setup() {
-  source "${TOP}/tests/common.sh"
+  source "${TOP}"/tests/common.sh
   common_setup
 
-  source ${TOP}/functions/utils.sh
+  source "${TOP}"/functions/utils.sh
 }
 
 @test "can call log_init with valid argument" {
