@@ -1,3 +1,5 @@
+#!/usr/bin/env bash
+
 SCRATCHPAD_PREFIX="Scratchpad"
 SCRATCHPAD_SUBMENU="Create new scratchpad"
 
@@ -26,7 +28,7 @@ function scratchpad_get_items() {
 
 function scratchpad_show_submenu() {
   clear
-  read -e -p "Enter name of scratchpad: " -i "$SCRATCHPAD_DEFAULT_NAME" scratchpad_name
+  read -r -e -p "Enter name of scratchpad: " -i "$SCRATCHPAD_DEFAULT_NAME" scratchpad_name
 
   if [ -z "$scratchpad_name" ]; then
     log "$LOG_ERROR" "Scratchpad name is empty."
@@ -67,8 +69,8 @@ function scratchpad_run_batch() {
   fi
 
   if [[ "$TERM_PROGRAM" == "tmux" ]]; then
-    eval tmux $TMUX_OPTS switch -t "$session_name"
+    eval tmux "$TMUX_OPTS" switch -t "$session_name"
   else
-    eval tmux $TMUX_OPTS attach-session -t "$session_name"
+    eval tmux "$TMUX_OPTS" attach-session -t "$session_name"
   fi
 }

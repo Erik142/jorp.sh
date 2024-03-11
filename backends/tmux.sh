@@ -20,7 +20,8 @@ function tmux_get_capabilities() {
 }
 
 function tmux_get_items() {
-  eval tmux $TMUX_OPTS ls | cut -d: -f1
+  log "$LOG_DEBUG" "Executing command 'tmux $TMUX_OPTS ls'"
+  eval tmux "$TMUX_OPTS" ls | cut -d: -f1
 }
 
 function tmux_session_exists() {
@@ -47,9 +48,9 @@ function tmux_select_item() {
   fi
 
   if [[ "$TERM_PROGRAM" == "tmux" ]]; then
-    eval tmux $TMUX_OPTS switch -t "$1" 2>&1 > /dev/null
+    eval tmux "$TMUX_OPTS" switch -t "$1" > /dev/null 2>&1
   else
-    eval tmux $TMUX_OPTS attach-session -t "$1" 2>&1 > /dev/null
+    eval tmux "$TMUX_OPTS" attach-session -t "$1" > /dev/null 2>&1
   fi
 }
 
@@ -61,5 +62,5 @@ function tmux_remove_item() {
     exit 1
   fi
 
-  eval tmux $TMUX_OPTS kill-session -t "$1" 2>&1 > /dev/null
+  eval tmux "$TMUX_OPTS" kill-session -t "$1" > /dev/null 2>&1
 }

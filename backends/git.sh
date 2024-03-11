@@ -1,7 +1,9 @@
+#!/usr/bin/env bash
+
 GIT_PREFIX="Git"
 GIT_SUBMENU="Find Git repositories"
 
-GIT_DEFAULT_ACTION='cd ${git_repository_path}'
+GIT_DEFAULT_ACTION="cd \$\{git_repository_path\}"
 
 declare -a GIT_PROJECT_DIRS
 declare -a GIT_EXCLUDED_DIRS
@@ -27,8 +29,7 @@ function git_get_submenu_items() {
   exclude_str=""
   for exclude_dir in "${GIT_EXCLUDED_DIRS[@]}";
   do
-    exclude_dir="$(echo $exclude_dir | sed 's|\/|\\\/|g')"
-    exclude_dir="$(echo $exclude_dir | sed 's|\.|\\\.|g')"
+    exclude_dir="${exclude_dir//./\\.}"
     exclude_str="${exclude_str} --exclude \"${exclude_dir}\""
   done
 
@@ -41,9 +42,8 @@ function git_get_submenu_items() {
     if [[ "$search_dir" != *"/" ]]; then
       search_dir="${search_dir}/"
     fi
-    search_filter="$(echo $search_dir | sed -e 's|\.|\\\.|g')"
-    search_filter="$(echo $search_filter | sed -e 's|\/|\\\\\\\/|g')"
-    exclude_str="$(echo $exclude_str | sed "s|$search_filter||g")"
+    search_filter="${search_dir//./\.}"
+    exclude_str="${exclude_str//$search_filter/}"
   done
 
   extra_fd_args="$(config_get_item "$CONFIG_GIT_EXTRA_FD_ARGS")"
@@ -66,6 +66,11 @@ function git_select_submenu_item() {
   git_repository_name="$(basename "$git_repository_path")"
   git_repository_parent_dir="$(dirname "$git_repository_path")"
   session_name="$(get_session_name "$git_repository_path")"
+
+  export git_repository_path
+  export git_repository_name
+  export git_repository_parent_dir
+  export session_name
 
   action="$(config_get_item "$CONFIG_GIT_ACTION")"
 

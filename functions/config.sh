@@ -2,18 +2,27 @@
 
 jq="jq -r -c -e"
 
-CONFIG_GENERAL_MAX_LOG_LEVEL="'.general.max_log_level'"
-CONFIG_GIT_PROJECT_DIRS="'.git.project_dirs.[]'"
-CONFIG_GIT_EXCLUDED_DIRS="'.git.excluded_dirs.[]'"
-CONFIG_GIT_EXTRA_FD_ARGS="'.git.extra_fd_args'"
-CONFIG_GIT_ACTION="'.git.action'"
-CONFIG_SCRATCHPAD_DEFAULT_NAME="'.scratchpad.default_name'"
-CONFIG_SCRATCHPAD_ACTION="'.scratchpad.action'"
-CONFIG_TMUX_EXTRA_OPTIONS="'.tmux.extra_options'"
+CONFIG_GENERAL_MAX_LOG_LEVEL=".general.max_log_level"
+CONFIG_GIT_PROJECT_DIRS=".git.project_dirs.[]"
+CONFIG_GIT_EXCLUDED_DIRS=".git.excluded_dirs.[]"
+CONFIG_GIT_EXTRA_FD_ARGS=".git.extra_fd_args"
+CONFIG_GIT_ACTION=".git.action"
+CONFIG_SCRATCHPAD_DEFAULT_NAME=".scratchpad.default_name"
+CONFIG_SCRATCHPAD_ACTION=".scratchpad.action"
+CONFIG_TMUX_EXTRA_OPTIONS=".tmux.extra_options"
+
+export CONFIG_GENERAL_MAX_LOG_LEVEL
+export CONFIG_GIT_PROJECT_DIRS
+export CONFIG_GIT_EXCLUDED_DIRS
+export CONFIG_GIT_EXTRA_FD_ARGS
+export CONFIG_GIT_ACTION
+export CONFIG_SCRATCHPAD_DEFAULT_NAME
+export CONFIG_SCRATCHPAD_ACTION
+export CONFIG_TMUX_EXTRA_OPTIONS
 
 CUSTOM_CONFIG_FILE_PATH=""
 
-config_sample_file_path="$this_script_dir/samples/config.json"
+config_sample_file_path="$THIS_SCRIPT_DIR/samples/config.json"
 
 function config_get_file_path() {
   config_file_location="$CUSTOM_CONFIG_FILE_PATH" 
@@ -36,7 +45,7 @@ function config_init() {
   if [ ! -e "$config_file" ]; then
     if [ -z "$CUSTOM_CONFIG_FILE_PATH" ]; then
       log "$LOG_VERBOSE" "No configuration file found. Copying sample configuration to '$config_file'"
-      mkdir -p "$(dirname $config_file)"
+      mkdir -p "$(dirname "$config_file")"
       cp "$config_sample_file_path" "$config_file"
     elif [ -n "$CUSTOM_CONFIG_FILE_PATH" ]; then
       log "$LOG_ERROR" "Custom configuration file '$CUSTOM_CONFIG_FILE_PATH' does not exist. Exiting..."
@@ -47,12 +56,8 @@ function config_init() {
 
 function config_get_item() {
   config_file="$(config_get_file_path)"
-  config_item="$(eval $jq "$1" "$config_file" 2>&1)"
-
-  if [ $? -ne 0 ]; then
+  if ! eval "$jq" "$1" "$config_file" 2> /dev/null; then
     log "$LOG_VERBOSE" "Could not retrieve configuration item $1"
     return
   fi
-
-  echo "$config_item"
 }
