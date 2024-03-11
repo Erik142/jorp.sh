@@ -1,12 +1,12 @@
 #!/usr/bin/env bash
 
 # Get the directory name for the current script
-this_script_dir="$(cd "$(dirname "$(readlink -f "$0")")" || exit; pwd)"
-export this_script_dir
+THIS_SCRIPT_DIR="$(cd "$(dirname "$(readlink -f "$0")")" || exit; pwd)"
+export THIS_SCRIPT_DIR
 
 ####################################
 #          Source functions        #
 ####################################
-. "$this_script_dir/functions/init.sh"
+. "$THIS_SCRIPT_DIR/functions/init.sh"
 
 run_project_manager "$@"
