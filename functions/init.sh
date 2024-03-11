@@ -3,9 +3,9 @@
 ####################################
 #          Source functions        #
 ####################################
-. "$this_script_dir/functions/config.sh"
-. "$this_script_dir/functions/utils.sh"
-. "$this_script_dir/backends/init.sh"
+. "$THIS_SCRIPT_DIR/functions/config.sh"
+. "$THIS_SCRIPT_DIR/functions/utils.sh"
+. "$THIS_SCRIPT_DIR/backends/init.sh"
 
 # TODO: Cleanup argument parsing examples
 
@@ -23,7 +23,7 @@ function parse_args() {
   # -use return value from ${PIPESTATUS[0]}, because ! hosed $?
   ! getopt --test > /dev/null 
   if [[ ${PIPESTATUS[0]} -ne 4 ]]; then
-    echo 'I’m sorry, `getopt --test` failed in this environment.'
+    echo "I’m sorry, 'getopt --test' failed in this environment."
     exit 1
   fi
 
@@ -96,7 +96,7 @@ function run_project_manager() {
   backend_init
 
   log "$LOG_VERBOSE"  "Arguments are '$*'"
-  log "$LOG_DEBUG" "This script is located in '$this_script_dir'"
+  log "$LOG_DEBUG" "This script is located in '$THIS_SCRIPT_DIR'"
 
   if [ "$batch" == "y" ]; then
     backend="$(echo "$batch_args" | cut -d" " -f1)"

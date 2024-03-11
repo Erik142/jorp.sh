@@ -23,7 +23,7 @@ function log_init() {
     max_log_level="$1"
 
     if [ -z "$max_log_level" ]; then
-        max_log_level="$(config_get_item $CONFIG_GENERAL_MAX_LOG_LEVEL)"
+        max_log_level="$(config_get_item "$CONFIG_GENERAL_MAX_LOG_LEVEL")"
     fi
 
     if [ -n "$max_log_level" ]; then
@@ -70,19 +70,21 @@ function log() {
         local log_level="$DEFAULT_LOG_LEVEL"
         message=""
         if [ $# -eq 2 ]; then
-            log_level="$1"
+            if [ -n "${LOG_LEVELS[$1]}" ]; then
+                log_level="$1"
+            fi
             message="$2"
         else
             message="$1"
         fi
 
-        if [ ${LOG_LEVELS["$log_level"]} -le ${LOG_LEVELS["$MAX_LOG_LEVEL"]} ]; then
+        if [[ "${LOG_LEVELS["$log_level"]}" -le "${LOG_LEVELS["$MAX_LOG_LEVEL"]}" ]]; then
             if [ "$MAX_LOG_LEVEL" == "$LOG_DEBUG" ]; then 
-                printf "%-$(log_level_length $log_level 8)b %-55s %s\n" "$(log_level_color $log_level)" "($(realpath --relative-to="$this_script_dir" "${BASH_SOURCE[1]}"): <${FUNCNAME[1]}: ${BASH_LINENO[0]}>)" "$message" >&2
+                printf "%-$(log_level_length "$log_level" 8)b %-55s %s\n" "$(log_level_color "$log_level")" "($(realpath --relative-to="$THIS_SCRIPT_DIR" "${BASH_SOURCE[1]}"): <${FUNCNAME[1]}: ${BASH_LINENO[0]}>)" "$message" >&2
             elif [ "$MAX_LOG_LEVEL" == "$LOG_VERBOSE" ]; then
-                printf "%-$(log_level_length $log_level 8)b %-35s %s\n" "$(log_level_color $log_level)" "<${FUNCNAME[1]}: ${BASH_LINENO[0]}>" "$message" >&2
+                printf "%-$(log_level_length "$log_level" 8)b %-35s %s\n" "$(log_level_color "$log_level")" "<${FUNCNAME[1]}: ${BASH_LINENO[0]}>" "$message" >&2
             else
-                printf "%-$(log_level_length $log_level 8)b %s\n" "$(log_level_color $log_level)" "$message" >&2
+                printf "%-$(log_level_length "$log_level" 8)b %s\n" "$(log_level_color "$log_level")" "$message" >&2
             fi
         fi
     else
@@ -94,16 +96,24 @@ function log() {
 }
 
 function get_session_name() {
-  leaf_path=$(basename "$1")
+  local leaf_path
+  local final_path
 
-  declare -a all_dirs=( $(echo "$1" | sed 's|/| |g') )
-  unset all_dirs[${#all_dirs[@]}-1]
+  leaf_path=$(basename "$1")
+  echo "arg=$1"
+
+  ifs=$IFS
+  IFS='/'
+  read -ra all_dirs <<< "$1"
+  IFS="$ifs"
+  unset "all_dirs[${#all_dirs[@]}-1]"
 
   final_path=""
 
   if (( ${#all_dirs[@]} >= 1 )); then
     for dir in "${all_dirs[@]}"
     do
+    echo "dir=$dir"
       if [[ "${dir:0:1}" != "." ]]; then
         final_path="$final_path/${dir:0:1}"
       else
