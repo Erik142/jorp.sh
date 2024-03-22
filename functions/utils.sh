@@ -100,11 +100,10 @@ function get_session_name() {
   local final_path
 
   leaf_path=$(basename "$1")
-  echo "arg=$1"
 
   ifs=$IFS
   IFS='/'
-  read -ra all_dirs <<< "$1"
+  read -ra all_dirs <<< "${1:1}"
   IFS="$ifs"
   unset "all_dirs[${#all_dirs[@]}-1]"
 
@@ -113,7 +112,6 @@ function get_session_name() {
   if (( ${#all_dirs[@]} >= 1 )); then
     for dir in "${all_dirs[@]}"
     do
-    echo "dir=$dir"
       if [[ "${dir:0:1}" != "." ]]; then
         final_path="$final_path/${dir:0:1}"
       else

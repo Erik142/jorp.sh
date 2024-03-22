@@ -58,7 +58,7 @@ setup() {
 
   run get_session_name "$directory_path"
 
-  assert_output --partial "$expected_session_name"
+  assert_output --regexp "^${expected_session_name}-"
 }
 
 @test "session names with leading dots resolve correctly" {
@@ -67,7 +67,7 @@ setup() {
 
   run get_session_name "$directory_path"
 
-  assert_output --partial "$expected_session_name"
+  assert_output --regexp "^${expected_session_name}-"
 }
 
 @test "session names with trailing dots resolve correctly" {
@@ -76,7 +76,7 @@ setup() {
 
   run get_session_name "$directory_path"
 
-  assert_output --partial "$expected_session_name"
+  assert_output --regexp "^${expected_session_name}-"
 }
 
 @test "session names with dots in the middle resolve correctly" {
@@ -85,5 +85,5 @@ setup() {
 
   run get_session_name "$directory_path"
 
-  assert_output --partial "$expected_session_name"
+  assert_output --regexp "^${expected_session_name}-"
 }
