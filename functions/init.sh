@@ -112,7 +112,8 @@ function run_project_manager() {
   fi
   get_items "$remove"
 
-  selected_item="$(printf "%s\n" "${BACKEND_ITEMS[@]}" | fzf)"
+  fzf_options="$(config_get_item "$CONFIG_FZF_EXTRA_OPTIONS")"
+  selected_item="$(printf "%s\n" "${BACKEND_ITEMS[@]}" | eval fzf "$fzf_options")"
 
   if [ -z "$selected_item" ]; then
       log "$LOG_WARNING" "The user did not select an item"
