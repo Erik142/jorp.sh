@@ -129,7 +129,8 @@ function show_submenu() {
     log "$LOG_DEBUG" "The backend '$backend' does not implement a custom submenu. Showing standard submenu..."
     mapfile -t submenu_items < <(find_and_execute_backend_function "get_submenu_items" "$backend")
 
-    selected_item="$(printf "%s\n" "${submenu_items[@]}" | fzf)"
+    fzf_options="$(config_get_item "$CONFIG_FZF_EXTRA_OPTIONS")"
+    selected_item="$(printf "%s\n" "${submenu_items[@]}" | eval fzf "$fzf_options")"
 
     if [ -z "$selected_item" ]; then
         log "$LOG_WARNING" "The user did not select an item"
