@@ -57,9 +57,14 @@ function config_init() {
 }
 
 function config_get_item() {
+  local config_file
+  local config_value
+
   config_file="$(config_get_file_path)"
-  if ! eval "$jq" "$1" "$config_file" 2> /dev/null; then
+  if ! config_value="$(eval "$jq" "$1" "$config_file" 2> /dev/null)"; then
     log "$LOG_VERBOSE" "Could not retrieve configuration item $1"
     return
   fi
+
+  echo "$config_value"
 }
