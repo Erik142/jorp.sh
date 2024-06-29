@@ -21,7 +21,7 @@ function path_show_submenu() {
   project_path="${project_path//~/$HOME}"
 
   if [[ ! -d "$project_path" ]]; then
-    log "$LOG_ERROR" "'$project_path' does not exist."
+    log_err "'$project_path' does not exist."
     exit 1
   fi
 

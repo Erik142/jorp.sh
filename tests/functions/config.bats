@@ -15,7 +15,7 @@ setup() {
   export CUSTOM_CONFIG_FILE_PATH
 
   source "${TOP}"/functions/config.sh
-  source "${TOP}"/functions/utils.sh
+  source "${TOP}"/log.sh/src/log.sh
 }
 
 teardown() {

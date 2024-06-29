@@ -14,7 +14,7 @@ function backend_init() {
   for backend in "${backends[@]}";
   do
     if [ "$(backend_require_init "$backend")" == "y" ]; then
-      log "$LOG_DEBUG" "Executing init function for backend '$backend'"
+      log_debug "Executing init function for backend '$backend'"
       find_and_execute_backend_function "init" "$backend"
     fi
   done
@@ -26,13 +26,13 @@ function get_items() {
   index=0
   for backend in "${backends[@]}";
   do
-    log "$LOG_DEBUG" "Processing backend: $backend"
+    log_debug "Processing backend: $backend"
     if [ "$remove" == "y" ]; then
       if [ "$(backend_has_removal "$backend")" != "y" ]; then
-        log "$LOG_DEBUG" "Backend '$backend' does not support removal of items, skipping..."
+        log_debug "Backend '$backend' does not support removal of items, skipping..."
         continue
       else
-        log "$LOG_DEBUG" "Backend '$backend' supports removal of items..."
+        log_debug "Backend '$backend' supports removal of items..."
       fi
     fi
 
@@ -48,7 +48,7 @@ function get_items() {
 
   for item in "${BACKEND_ITEMS[@]}";
   do
-    log "$LOG_DEBUG" "$item"
+    log_debug "$item"
   done
 }
 
@@ -62,7 +62,7 @@ function get_backend_from_prefix() {
     fi
   done
 
-  log "$LOG_ERROR" "The prefix '$1' does not correspond to any registered backend"
+  log_err "The prefix '$1' does not correspond to any registered backend"
 }
 
 function find_and_execute_backend_function() {
@@ -74,7 +74,7 @@ function find_and_execute_backend_function() {
   do
     if [ "$backend" == "$chosen_backend" ]; then
       if ! declare -F "${backend}_${function}" > /dev/null; then
-        log "$LOG_ERROR" "The function '${backend}_${function} does not exist"
+        log_err "The function '${backend}_${function} does not exist"
         exit 1
       fi
     
@@ -83,7 +83,7 @@ function find_and_execute_backend_function() {
     fi
   done
 
-  log "$LOG_ERROR" "The backend '$chosen_backend' is not valid"
+  log_err "The backend '$chosen_backend' is not valid"
   exit 1
 }
 
@@ -118,26 +118,26 @@ function backend_has_batch() {
 function show_submenu() {
   local backend="$1"
   if [[ "$(find_and_execute_backend_function "get_capabilities" "$backend")" != *"$CAPABILITY_SUBMENU"* ]]; then
-    log "$LOG_DEBUG" "The backend '$backend' does not have a submenu"
+    log_debug "The backend '$backend' does not have a submenu"
     exit 1
   fi
 
   if declare -F "${backend}_show_submenu" > /dev/null; then
-    log "$LOG_DEBUG" "The backend '$backend' implements a custom submenu. Showing it..."
+    log_debug "The backend '$backend' implements a custom submenu. Showing it..."
     find_and_execute_backend_function "show_submenu" "$backend"
   else
-    log "$LOG_DEBUG" "The backend '$backend' does not implement a custom submenu. Showing standard submenu..."
+    log_debug "The backend '$backend' does not implement a custom submenu. Showing standard submenu..."
     mapfile -t submenu_items < <(find_and_execute_backend_function "get_submenu_items" "$backend")
 
     fzf_options="$(config_get_item "$CONFIG_FZF_EXTRA_OPTIONS")"
     selected_item="$(printf "%s\n" "${submenu_items[@]}" | eval fzf "$fzf_options")"
 
     if [ -z "$selected_item" ]; then
-        log "$LOG_WARNING" "The user did not select an item"
+        log_warn "The user did not select an item"
         exit 0
     fi
 
-    log "$LOG_DEBUG" "Selected submenu item: $selected_item"
+    log_debug "Selected submenu item: $selected_item"
     find_and_execute_backend_function "select_submenu_item" "$backend" "$selected_item"
   fi
 }

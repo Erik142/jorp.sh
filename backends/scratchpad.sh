@@ -9,7 +9,7 @@ function scratchpad_init() {
   default_name="$(config_get_item "$CONFIG_SCRATCHPAD_DEFAULT_NAME")"
 
   if [ -n "$default_name" ]; then
-    log "$LOG_DEBUG" "Setting default scratchpad name to '$default_name'"
+    log_debug "Setting default scratchpad name to '$default_name'"
     SCRATCHPAD_DEFAULT_NAME="$default_name"
   fi
 }
@@ -31,7 +31,7 @@ function scratchpad_show_submenu() {
   read -r -e -p "Enter name of scratchpad: " -i "$SCRATCHPAD_DEFAULT_NAME" scratchpad_name
 
   if [ -z "$scratchpad_name" ]; then
-    log "$LOG_ERROR" "Scratchpad name is empty."
+    log_err "Scratchpad name is empty."
     exit 1
   fi
 
@@ -61,7 +61,7 @@ function scratchpad_run_batch() {
     action="$(config_get_item "$CONFIG_SCRATCHPAD_ACTION")"
 
     if [ -z "$action" ]; then
-      log "$LOG_ERROR" "No scratchpad action defined in user configuration file"
+      log_err "No scratchpad action defined in user configuration file"
       exit 1
     fi
 

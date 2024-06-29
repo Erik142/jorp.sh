@@ -7,3 +7,6 @@
 [submodule "bats/bats-assert"]
 	path = bats/bats-assert
 	url = https://github.com/bats-core/bats-assert.git
+[submodule "log.sh"]
+	path = log.sh
+	url = https://github.com/Erik142/log.sh.git

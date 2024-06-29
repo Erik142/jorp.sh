@@ -7,7 +7,7 @@ TMUX_OPTS=""
 function tmux_init() {
   TMUX_OPTS="$(config_get_item "$CONFIG_TMUX_EXTRA_OPTIONS")"
   if [ -n "$TMUX_OPTS" ]; then
-    log "$LOG_DEBUG" "Extra tmux options are: '$TMUX_OPTS'"
+    log_debug "Extra tmux options are: '$TMUX_OPTS'"
   fi
 }
 
@@ -20,7 +20,7 @@ function tmux_get_capabilities() {
 }
 
 function tmux_get_items() {
-  log "$LOG_DEBUG" "Executing command 'tmux $TMUX_OPTS ls'"
+  log_debug "Executing command 'tmux $TMUX_OPTS ls'"
   eval tmux "$TMUX_OPTS" ls | cut -d: -f1
 }
 
@@ -43,7 +43,7 @@ function tmux_select_item() {
   session_exists="$(tmux_session_exists "$1")"
 
   if [ "$session_exists" != "y" ]; then
-    log "$LOG_ERROR" "The tmux session '$1' does not exist"
+    log_err "The tmux session '$1' does not exist"
     exit 1
   fi
 
@@ -58,7 +58,7 @@ function tmux_remove_item() {
   session_exists="$(tmux_session_exists "$1")"
 
   if [ "$session_exists" == "n" ]; then
-    log "$LOG_ERROR" "The tmux session '$1' does not exist"
+    log_err "The tmux session '$1' does not exist"
     exit 1
   fi
 

@@ -46,11 +46,11 @@ function config_init() {
 
   if [ ! -e "$config_file" ]; then
     if [ -z "$CUSTOM_CONFIG_FILE_PATH" ]; then
-      log "$LOG_VERBOSE" "No configuration file found. Copying sample configuration to '$config_file'"
+      log_verbose "No configuration file found. Copying sample configuration to '$config_file'"
       mkdir -p "$(dirname "$config_file")"
       cp "$config_sample_file_path" "$config_file"
     elif [ -n "$CUSTOM_CONFIG_FILE_PATH" ]; then
-      log "$LOG_ERROR" "Custom configuration file '$CUSTOM_CONFIG_FILE_PATH' does not exist. Exiting..."
+      log_err "Custom configuration file '$CUSTOM_CONFIG_FILE_PATH' does not exist. Exiting..."
       exit 1
     fi
   fi
@@ -62,7 +62,7 @@ function config_get_item() {
 
   config_file="$(config_get_file_path)"
   if ! config_value="$(eval "$jq" "$1" "$config_file" 2> /dev/null)"; then
-    log "$LOG_VERBOSE" "Could not retrieve configuration item $1"
+    log_verbose "Could not retrieve configuration item $1"
     return
   fi
 
