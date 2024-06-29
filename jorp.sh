@@ -8,5 +8,6 @@ export THIS_SCRIPT_DIR
 #          Source functions        #
 ####################################
 . "$THIS_SCRIPT_DIR/functions/init.sh"
+. "$THIS_SCRIPT_DIR/log.sh/src/log.sh"
 
 run_project_manager "$@"

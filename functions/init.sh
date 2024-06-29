@@ -82,28 +82,28 @@ function run_project_manager() {
   parse_args "$@"
   config_init "$config_file"
 
-  max_log_level=""
+  max_log_level="INFO"
 
   if [ "$verbose" == "y" ]; then
-    max_log_level="$LOG_VERBOSE"
+    max_log_level="VERBOSE"
   fi
 
   if [ "$debug" == "y" ]; then
-    max_log_level="$LOG_DEBUG"
+    max_log_level="DEBUG"
   fi
 
-  log_init "$max_log_level"
+  set_max_log_level "$max_log_level"
   backend_init
 
-  log "$LOG_VERBOSE"  "Arguments are '$*'"
-  log "$LOG_DEBUG" "This script is located in '$THIS_SCRIPT_DIR'"
+  log_verbose  "Arguments are '$*'"
+  log_debug "This script is located in '$THIS_SCRIPT_DIR'"
 
   if [ "$batch" == "y" ]; then
     backend="$(echo "$batch_args" | cut -d" " -f1)"
     batch_args="$(echo "$batch_args" | cut -d" " -f2-)"
 
     if [ "$(backend_has_batch "$backend")" == "n" ]; then
-      log "$LOG_DEBUG" "The backend '$backend' does not support batch processing"
+      log_debug "The backend '$backend' does not support batch processing"
       exit 1
     fi
 
@@ -116,7 +116,7 @@ function run_project_manager() {
   selected_item="$(printf "%s\n" "${BACKEND_ITEMS[@]}" | eval fzf "$fzf_options")"
 
   if [ -z "$selected_item" ]; then
-      log "$LOG_WARNING" "The user did not select an item"
+      log_warn "The user did not select an item"
       exit 0
   fi
 
@@ -126,7 +126,7 @@ function run_project_manager() {
   backend="$(get_backend_from_prefix "$prefix")"
 
   if [ "$(backend_has_submenu "$backend")" == "y" ]; then
-    log "$LOG_DEBUG" "Showing submenu for backend '$backend'"
+    log_debug "Showing submenu for backend '$backend'"
     show_submenu "$backend" "$remove"
   else
     if [ "$remove" == "y" ]; then

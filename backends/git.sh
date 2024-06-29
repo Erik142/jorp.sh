@@ -48,16 +48,16 @@ function git_get_submenu_items() {
 
   extra_fd_args="$(config_get_item "$CONFIG_GIT_EXTRA_FD_ARGS")"
   fd_command="fd -u '^\.git$' --prune $exclude_str --type d $search_dirs $extra_fd_args -X printf '%s\\n' '{//}'"
-  log "$LOG_DEBUG" "Exclude dirs: '$exclude_str'"
-  log "$LOG_DEBUG" "Search filter: '$search_filter'"
-  log "$LOG_DEBUG" "Search dir: '$search_dir'"
-  log "$LOG_DEBUG" "fd command is: '$fd_command'"
+  log_debug "Exclude dirs: '$exclude_str'"
+  log_debug "Search filter: '$search_filter'"
+  log_debug "Search dir: '$search_dir'"
+  log_debug "fd command is: '$fd_command'"
   eval "$fd_command"
 }
 
 function git_select_submenu_item() {
   if [ ! -d "$1" ]; then
-    log "$LOG_ERROR" "The directory '$1' does not exist"
+    log_err "The directory '$1' does not exist"
   fi
 
   # The following variables are available upon terminal multiplexer session
@@ -76,7 +76,7 @@ function git_select_submenu_item() {
 
   if [ -z "$action" ]; then
     action="$GIT_DEFAULT_ACTION"
-    log "$LOG_VERBOSE" "Executing default git action: '$action'"
+    log_verbose "Executing default git action: '$action'"
   fi
 
   eval "$action"
