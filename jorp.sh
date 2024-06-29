@@ -7,7 +7,9 @@ export THIS_SCRIPT_DIR
 ####################################
 #          Source functions        #
 ####################################
+# shellcheck source-path=SCRIPTDIR
 . "$THIS_SCRIPT_DIR/functions/init.sh"
+# shellcheck source-path=SCRIPTDIR
 . "$THIS_SCRIPT_DIR/log.sh/src/log.sh"
 
 run_project_manager "$@"
