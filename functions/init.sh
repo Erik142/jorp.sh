@@ -12,10 +12,24 @@
 # option --output/-o requires 1 argument
 # LONGOPTS=debug,force,output:,verbose
 # OPTIONS=dfo:v
-LONGOPTS=batch:,config:,debug,remove,verbose
-OPTIONS=b:c:drv
+LONGOPTS=batch:,config:,debug,help,remove,verbose
+OPTIONS=b:c:dhrv
 
 export batch=n batch_args="" config_file="" debug=n verbose=n remove=n
+
+function usage() {
+  script_name="$(basename "$(readlink -f "$0")")"
+  echo "jorp.sh - A terminal multiplexer project/session manager"
+  echo ""
+  echo "Usage: $script_name [option]"
+  echo ""
+  echo "  -h,--help                                     Print this usage information"
+  echo "  -b,--batch <command1>[,<command2>...]         Run the specified command(s) non-interactively"
+  echo "  -c,--config <config file>                     Specify a path to a configuration file. Defaults to \$XDG_CONFIG_HOME/jorp.sh/config.json"
+  echo "  -d,--debug                                    Print debug log messages. Takes precedence over verbose messages"
+  echo "  -r,--remove                                   Start jorp.sh in \"removal mode\" where the chosen multiplexer session will be removed"
+  echo "  -v,--verbose                                  Print verbose log messages"
+}
 
 function parse_args() {
   #set -o errexit -o pipefail -o noclobber -o nounset
@@ -65,6 +79,10 @@ function parse_args() {
           -v|--verbose)
               verbose=y
               shift
+              ;;
+          -h|--help)
+              usage
+              exit 0
               ;;
           --)
               shift
