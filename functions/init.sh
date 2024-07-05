@@ -28,6 +28,7 @@ function usage() {
   echo "  -c,--config <config file>                     Specify a path to a configuration file. Defaults to \$XDG_CONFIG_HOME/jorp.sh/config.json"
   echo "  -d,--debug                                    Print debug log messages. Takes precedence over verbose messages"
   echo "  -r,--remove                                   Start jorp.sh in \"removal mode\" where the chosen multiplexer session will be removed"
+  echo "  -l,--last-item <backend>                      Switch to the last selected item for the backend with the name <backend>"
   echo "  -v,--verbose                                  Print verbose log messages"
 }
 
