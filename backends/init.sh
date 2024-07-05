@@ -115,6 +115,11 @@ function backend_has_batch() {
     echo "y" || echo "n"
 }
 
+function backend_has_lastitem() {
+  [[ "$(find_and_execute_backend_function "get_capabilities" "$backend")" == *"$CAPABILITY_SELECT_LAST_ITEM"* ]] && \
+    echo "y" || echo "n"
+}
+
 function show_submenu() {
   local backend="$1"
   if [[ "$(find_and_execute_backend_function "get_capabilities" "$backend")" != *"$CAPABILITY_SUBMENU"* ]]; then
@@ -140,4 +145,13 @@ function show_submenu() {
     log_debug "Selected submenu item: $selected_item"
     find_and_execute_backend_function "select_submenu_item" "$backend" "$selected_item"
   fi
+}
+
+function select_last_item() {
+  if [[ "$(backend_has_lastitem "$backend")" == "n" ]]; then
+    log_err "The backend '$backend' does not support selection of last item"
+    exit 1
+  fi
+
+  find_and_execute_backend_function "select_last_item" "$backend"
 }
