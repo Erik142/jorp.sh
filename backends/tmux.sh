@@ -16,7 +16,7 @@ function tmux_get_prefix() {
 }
 
 function tmux_get_capabilities() {
-  echo "$CAPABILITY_ITEM_REMOVAL|$CAPABILITY_REQUIRE_INIT"
+  echo "$CAPABILITY_ITEM_REMOVAL|$CAPABILITY_REQUIRE_INIT|$CAPABILITY_SELECT_LAST_ITEM"
 }
 
 function tmux_get_items() {
@@ -52,6 +52,18 @@ function tmux_select_item() {
   else
     eval tmux "$TMUX_OPTS" attach-session -t "$1" > /dev/null 2>&1
   fi
+}
+
+function tmux_select_last_item() {
+  local last_session
+  last_session="$(tmux display-message -p "#{client_last_session}")"
+
+  if [ -z "$last_session" ]; then
+    log_warn "Could not find last tmux session"
+    exit 0
+  fi
+
+  tmux_select_item "$last_session"
 }
 
 function tmux_remove_item() {
