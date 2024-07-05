@@ -17,6 +17,7 @@ cd jorp.sh/
 By default, jorp.sh is configured to use the internal backends in the application:
 
 - git: Search for local git repositories and open a new session inside the git repository
+- git_remote: Clone a remote repository and start a terminal multiplexer session
 - scratch: Create a "scratchpad" session
 - path: Specify a custom path and open a new session in that path
 - tmux: Use tmux as the terminal multiplexer of choice (currently the only supported multiplexer, with plans to support others in the future)
