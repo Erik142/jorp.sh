@@ -12,10 +12,10 @@
 # option --output/-o requires 1 argument
 # LONGOPTS=debug,force,output:,verbose
 # OPTIONS=dfo:v
-LONGOPTS=batch:,config:,debug,help,remove,verbose
-OPTIONS=b:c:dhrv
+LONGOPTS=batch:,config:,debug,help,last-item:,remove,verbose
+OPTIONS=b:c:dhl:rv
 
-export batch=n batch_args="" config_file="" debug=n verbose=n remove=n
+export batch=n batch_args="" config_file="" debug=n last_item_backend="" verbose=n remove=n
 
 function usage() {
   script_name="$(basename "$(readlink -f "$0")")"
@@ -76,6 +76,11 @@ function parse_args() {
               remove=y
               shift
               ;;
+          -l|--last-item)
+              last_item_backend="$2"
+              shift
+              shift
+              ;;
           -v|--verbose)
               verbose=y
               shift
@@ -115,6 +120,12 @@ function run_project_manager() {
 
   log_verbose  "Arguments are '$*'"
   log_debug "This script is located in '$THIS_SCRIPT_DIR'"
+
+  if [ -n "$last_item_backend" ]; then
+    backend="$last_item_backend"
+    select_last_item
+    return
+  fi
 
   if [ "$batch" == "y" ]; then
     backend="$(echo "$batch_args" | cut -d" " -f1)"
