@@ -3,10 +3,11 @@
 . "$THIS_SCRIPT_DIR/backends/capabilities.sh"
 . "$THIS_SCRIPT_DIR/backends/tmux.sh"
 . "$THIS_SCRIPT_DIR/backends/git.sh"
+. "$THIS_SCRIPT_DIR/backends/git_remote.sh"
 . "$THIS_SCRIPT_DIR/backends/path.sh"
 . "$THIS_SCRIPT_DIR/backends/scratchpad.sh"
 
-backends=("tmux" "git" "path" "scratchpad" )
+backends=("tmux" "git" "git_remote" "path" "scratchpad" )
 
 declare -a BACKEND_ITEMS
 
