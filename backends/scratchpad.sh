@@ -67,10 +67,4 @@ function scratchpad_run_batch() {
 
     eval "$action"
   fi
-
-  if [[ "$TERM_PROGRAM" == "tmux" ]]; then
-    eval tmux "$TMUX_OPTS" switch -t "$session_name"
-  else
-    eval tmux "$TMUX_OPTS" attach-session -t "$session_name"
-  fi
 }
