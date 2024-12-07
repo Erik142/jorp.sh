@@ -5,5 +5,14 @@
   ],
   "git-submodules": {
     "enabled": true
-  }
+  },
+  "packageRules": [
+    {
+      "matchManagers": [
+        "git-submodules"
+      ],
+      "automerge": true,
+      "minimumReleaseAge": null
+    }
+  ]
 }
