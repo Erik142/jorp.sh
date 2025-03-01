@@ -37,13 +37,13 @@ function get_items() {
       fi
     fi
 
-    prefix="$("${backend}"_get_prefix)" 
+    prefix="$("${backend}"_get_prefix)"
     mapfile -t backend_items < <("${backend}"_get_items)
 
     for backend_item in "${backend_items[@]}";
     do
       BACKEND_ITEMS[index]="$prefix: $backend_item"
-      index=$((index + 1)) 
+      index=$((index + 1))
     done
   done
 
@@ -78,7 +78,7 @@ function find_and_execute_backend_function() {
         log_err "The function '${backend}_${function} does not exist"
         exit 1
       fi
-    
+
       "${backend}"_"${function}" "$@"
       return
     fi
