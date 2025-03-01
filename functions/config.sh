@@ -64,7 +64,7 @@ function config_get_item() {
 
   config_file="$(config_get_file_path)"
   if ! config_value="$(eval "$jq" "$1" "$config_file" 2> /dev/null)"; then
-    log_verbose "Could not retrieve configuration item $1"
+    log_verbose "Could not retrieve configuration item $1" >&2
     return
   fi
 

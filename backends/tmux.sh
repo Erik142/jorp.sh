@@ -20,7 +20,7 @@ function tmux_get_capabilities() {
 }
 
 function tmux_get_items() {
-  log_debug "Executing command 'tmux $TMUX_OPTS ls'"
+  log_debug "Executing command 'tmux $TMUX_OPTS ls'" >&2
   eval tmux "$TMUX_OPTS" ls | cut -d: -f1
 }
 
