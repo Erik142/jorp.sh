@@ -3,8 +3,8 @@
 jq="jq -r -c -e"
 
 CONFIG_GENERAL_MAX_LOG_LEVEL=".general.max_log_level"
-CONFIG_GIT_PROJECT_DIRS=".git.project_dirs.[]"
-CONFIG_GIT_EXCLUDED_DIRS=".git.excluded_dirs.[]"
+CONFIG_GIT_PROJECT_DIRS=".git.project_dirs[]"
+CONFIG_GIT_EXCLUDED_DIRS=".git.excluded_dirs[]"
 CONFIG_GIT_EXTRA_FD_ARGS=".git.extra_fd_args"
 CONFIG_GIT_ACTION=".git.action"
 CONFIG_GIT_REMOTE_REPOS_PATH=".git_remote.repos_path"
@@ -29,7 +29,7 @@ CUSTOM_CONFIG_FILE_PATH=""
 config_sample_file_path="$THIS_SCRIPT_DIR/samples/config.json"
 
 function config_get_file_path() {
-  config_file_location="$CUSTOM_CONFIG_FILE_PATH" 
+  config_file_location="$CUSTOM_CONFIG_FILE_PATH"
 
   if [ -z "$config_file_location" ]; then
     if [ -n "$XDG_CONFIG_HOME" ]; then
@@ -64,7 +64,7 @@ function config_get_item() {
 
   config_file="$(config_get_file_path)"
   if ! config_value="$(eval "$jq" "$1" "$config_file" 2> /dev/null)"; then
-    log_verbose "Could not retrieve configuration item $1"
+    log_verbose "Could not retrieve configuration item $1" >&2
     return
   fi
 

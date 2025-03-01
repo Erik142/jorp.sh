@@ -29,7 +29,7 @@ function git_remote_show_submenu() {
   fi
 
   read -r -e -p "Enter local Git clone path: " -i "$local_repo_path" local_repo_path
-  
+
 
   if [[ ! -d "$(dirname "$local_repo_path")" ]]; then
     log_debug "'$local_repo_path' does not exist."
