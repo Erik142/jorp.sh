@@ -3,8 +3,8 @@
 ####################################
 #          Source functions        #
 ####################################
-. "$THIS_SCRIPT_DIR/functions/config.sh"
-. "$THIS_SCRIPT_DIR/functions/utils.sh"
+. "$THIS_SCRIPT_DIR/core/config.sh"
+. "$THIS_SCRIPT_DIR/core/utils.sh"
 . "$THIS_SCRIPT_DIR/backends/init.sh"
 
 # TODO: Cleanup argument parsing examples
