@@ -14,7 +14,7 @@ setup() {
   export HOME
   export CUSTOM_CONFIG_FILE_PATH
 
-  source "${TOP}"/functions/config.sh
+  source "${TOP}"/core/config.sh
   source "${TOP}"/log.sh/src/log.sh
 }
 
