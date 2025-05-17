@@ -2,7 +2,7 @@ setup() {
   source "${TOP}"/tests/common.sh
   common_setup
 
-  source "${TOP}"/functions/utils.sh
+  source "${TOP}"/core/utils.sh
 }
 
 @test "session names without dots resolve correctly" {

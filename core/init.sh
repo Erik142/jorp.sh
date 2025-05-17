@@ -3,15 +3,10 @@
 ####################################
 #          Source functions        #
 ####################################
-. "$THIS_SCRIPT_DIR/functions/config.sh"
-. "$THIS_SCRIPT_DIR/functions/utils.sh"
+. "$THIS_SCRIPT_DIR/core/config.sh"
+. "$THIS_SCRIPT_DIR/core/utils.sh"
 . "$THIS_SCRIPT_DIR/backends/init.sh"
 
-# TODO: Cleanup argument parsing examples
-
-# option --output/-o requires 1 argument
-# LONGOPTS=debug,force,output:,verbose
-# OPTIONS=dfo:v
 LONGOPTS=batch:,config:,debug,help,last-item:,remove,verbose
 OPTIONS=b:c:dhl:rv
 
