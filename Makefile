@@ -8,7 +8,7 @@ export TOP := $(realpath $(dir $(realpath $(firstword $(MAKEFILE_LIST)))))
 
 .PHONY: lint
 lint:
-	$(Q)fd --ignore-file $(TOP)/.lintignore --glob '*.sh' --type f -u -a $(TOP) | xargs shellcheck -x
+	$(Q)fd --ignore-file $(TOP)/.lintignore -e 'sh' -e 'bats' --type f -u -a . $(TOP) | xargs shellcheck -x
 
 .PHONY: test
 test:

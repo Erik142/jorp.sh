@@ -129,6 +129,7 @@ teardown() {
 
   assert [ -f "$expected_config_file_location" ]
 
+  # shellcheck disable=SC2119
   XDG_CONFIG_HOME="${CONFIG_DIR}" config_init
 
   XDG_CONFIG_HOME="${CONFIG_DIR}" run config_get_item "$CONFIG_GENERAL_MAX_LOG_LEVEL"
@@ -148,6 +149,7 @@ teardown() {
 
   assert [ -f "$expected_config_file_location" ]
 
+  # shellcheck disable=SC2119
   XDG_CONFIG_HOME="${CONFIG_DIR}" config_init
 
   XDG_CONFIG_HOME="${CONFIG_DIR}" run config_get_item "$CONFIG_GIT_EXTRA_FD_ARGS"
@@ -167,6 +169,7 @@ teardown() {
 
   assert [ -f "$expected_config_file_location" ]
 
+  # shellcheck disable=SC2119
   XDG_CONFIG_HOME="${CONFIG_DIR}" config_init
 
   XDG_CONFIG_HOME="${CONFIG_DIR}" run config_get_item "$CONFIG_GENERAL_MAX_LEVEL"
