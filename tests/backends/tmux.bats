@@ -43,6 +43,43 @@ setup() {
   assert_output --partial "ARG:My Project-20240101-000000"
 }
 
+@test "tmux_init expands variables in extra_options into separate arguments" {
+  # shellcheck disable=SC2016,SC2329
+  function config_get_item() { echo '-u -S $HOME/.tmux.sock'; }
+
+  # log_debug touches file descriptor 3, which bats also uses for its own
+  # bookkeeping, so it must run inside the run() subshell, not the test body.
+  # shellcheck disable=SC2329
+  print_opts() {
+    HOME="/home/testuser" tmux_init
+    printf '%s\n' "${TMUX_OPTS_ARRAY[@]}"
+  }
+  run print_opts
+
+  assert_success
+  assert_output --partial "
+-u
+-S
+/home/testuser/.tmux.sock"
+}
+
+@test "tmux_get_items uses the extra_options socket configured via tmux_init" {
+  # shellcheck disable=SC2016,SC2329
+  function config_get_item() { echo '-u -S $HOME/.tmux.sock'; }
+
+  # shellcheck disable=SC2329
+  init_and_list() {
+    HOME="/home/testuser" tmux_init
+    tmux_get_items
+  }
+  run init_and_list
+
+  run cat "$tmux_args_file"
+  assert_output --partial "ARG:-u"
+  assert_output --partial "ARG:-S"
+  assert_output --partial "ARG:/home/testuser/.tmux.sock"
+}
+
 @test "tmux_remove_item logs the tmux error instead of discarding it" {
   # shellcheck disable=SC2329
   function tmux() {
