@@ -21,7 +21,8 @@ function tmux_get_capabilities() {
 
 function tmux_get_items() {
   log_debug "Executing command 'tmux $TMUX_OPTS ls'" >&2
-  eval tmux "$TMUX_OPTS" ls | cut -d: -f1
+  # shellcheck disable=SC2086
+  tmux $TMUX_OPTS ls | cut -d: -f1
 }
 
 function tmux_session_exists() {
@@ -47,10 +48,18 @@ function tmux_select_item() {
     exit 1
   fi
 
+  local subcommand="attach-session"
   if [[ "$TERM_PROGRAM" == "tmux" ]]; then
-    eval tmux "$TMUX_OPTS" switch -t "$1" > /dev/null 2>&1
-  else
-    eval tmux "$TMUX_OPTS" attach-session -t "$1" > /dev/null 2>&1
+    subcommand="switch"
+  fi
+
+  log_debug "Executing command 'tmux $TMUX_OPTS $subcommand -t $1'"
+
+  local tmux_output
+  # shellcheck disable=SC2086
+  if ! tmux_output="$(tmux $TMUX_OPTS "$subcommand" -t "$1" 2>&1)"; then
+    log_err "Could not $subcommand to tmux session '$1': $tmux_output"
+    exit 1
   fi
 }
 
@@ -74,5 +83,12 @@ function tmux_remove_item() {
     exit 1
   fi
 
-  eval tmux "$TMUX_OPTS" kill-session -t "$1" > /dev/null 2>&1
+  log_debug "Executing command 'tmux $TMUX_OPTS kill-session -t $1'"
+
+  local tmux_output
+  # shellcheck disable=SC2086
+  if ! tmux_output="$(tmux $TMUX_OPTS kill-session -t "$1" 2>&1)"; then
+    log_err "Could not kill tmux session '$1': $tmux_output"
+    exit 1
+  fi
 }
