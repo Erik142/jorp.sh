@@ -57,6 +57,7 @@ function git_get_submenu_items() {
 function git_select_submenu_item() {
   if [ ! -d "$1" ]; then
     log_err "The directory '$1' does not exist"
+    exit 1
   fi
 
   # The following variables are available upon terminal multiplexer session

@@ -3,11 +3,17 @@
 TMUX_PREFIX="Tmux"
 
 TMUX_OPTS=""
+declare -a TMUX_OPTS_ARRAY=()
 
 function tmux_init() {
   TMUX_OPTS="$(config_get_item "$CONFIG_TMUX_EXTRA_OPTIONS")"
+  TMUX_OPTS_ARRAY=()
+
   if [ -n "$TMUX_OPTS" ]; then
     log_debug "Extra tmux options are: '$TMUX_OPTS'"
+    # Expanded once here, from trusted configuration, so that values like
+    # "-S $HOME/.tmux.sock" still resolve. Never eval per-session-name values.
+    eval "TMUX_OPTS_ARRAY=($TMUX_OPTS)"
   fi
 }
 
@@ -20,8 +26,8 @@ function tmux_get_capabilities() {
 }
 
 function tmux_get_items() {
-  log_debug "Executing command 'tmux $TMUX_OPTS ls'" >&2
-  eval tmux "$TMUX_OPTS" ls | cut -d: -f1
+  log_debug "Executing command 'tmux ${TMUX_OPTS_ARRAY[*]} ls'" >&2
+  tmux "${TMUX_OPTS_ARRAY[@]}" ls | cut -d: -f1
 }
 
 function tmux_session_exists() {
@@ -47,10 +53,17 @@ function tmux_select_item() {
     exit 1
   fi
 
+  local subcommand="attach-session"
   if [[ "$TERM_PROGRAM" == "tmux" ]]; then
-    eval tmux "$TMUX_OPTS" switch -t "$1" > /dev/null 2>&1
-  else
-    eval tmux "$TMUX_OPTS" attach-session -t "$1" > /dev/null 2>&1
+    subcommand="switch"
+  fi
+
+  log_debug "Executing command 'tmux ${TMUX_OPTS_ARRAY[*]} $subcommand -t $1'"
+
+  local tmux_output
+  if ! tmux_output="$(tmux "${TMUX_OPTS_ARRAY[@]}" "$subcommand" -t "$1" 2>&1)"; then
+    log_err "Could not $subcommand to tmux session '$1': $tmux_output"
+    exit 1
   fi
 }
 
@@ -74,5 +87,11 @@ function tmux_remove_item() {
     exit 1
   fi
 
-  eval tmux "$TMUX_OPTS" kill-session -t "$1" > /dev/null 2>&1
+  log_debug "Executing command 'tmux ${TMUX_OPTS_ARRAY[*]} kill-session -t $1'"
+
+  local tmux_output
+  if ! tmux_output="$(tmux "${TMUX_OPTS_ARRAY[@]}" kill-session -t "$1" 2>&1)"; then
+    log_err "Could not kill tmux session '$1': $tmux_output"
+    exit 1
+  fi
 }
