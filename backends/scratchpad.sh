@@ -54,7 +54,10 @@ function scratchpad_run_batch() {
 
   if [ "$open_existing_scratchpad" == "y" ]; then
     session_name="$(scratchpad_get_session_name "$scratchpad_name")"
-    tmux_select_item "$session_name"
+
+    if [ -n "$session_name" ]; then
+      tmux_select_item "$session_name"
+    fi
   fi
 
   if [ -z "$session_name" ]; then
