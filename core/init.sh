@@ -97,6 +97,17 @@ function parse_args() {
   done
 }
 
+function parse_batch_command() {
+  local input="$1"
+  batch_backend="${input%% *}"
+
+  if [[ "$input" == *" "* ]]; then
+    batch_command_args="${input#* }"
+  else
+    batch_command_args=""
+  fi
+}
+
 function run_project_manager() {
   parse_args "$@"
   config_init "$config_file"
@@ -124,8 +135,9 @@ function run_project_manager() {
   fi
 
   if [ "$batch" == "y" ]; then
-    backend="$(echo "$batch_args" | cut -d" " -f1)"
-    batch_args="$(echo "$batch_args" | cut -d" " -f2-)"
+    parse_batch_command "$batch_args"
+    backend="$batch_backend"
+    batch_args="$batch_command_args"
 
     if [ "$(backend_has_batch "$backend")" == "n" ]; then
       log_debug "The backend '$backend' does not support batch processing"
